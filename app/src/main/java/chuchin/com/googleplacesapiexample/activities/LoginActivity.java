@@ -6,12 +6,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 
 import chuchin.com.googleplacesapiexample.R;
 import chuchin.com.googleplacesapiexample.helper.NetworkManager;
 import chuchin.com.googleplacesapiexample.helper.PrivateAPI;
 import chuchin.com.googleplacesapiexample.model.RequestPackage;
+import chuchin.com.googleplacesapiexample.model.geocodingAPI.GeocodingModel;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -83,7 +87,15 @@ public class LoginActivity extends AppCompatActivity {
             super.onPostExecute(result);
             if (result != null) {
 
-                Log.d(TAG, "onPostExecute: " + result);
+                try {
+                    JSONObject jsonObject = new JSONObject(result);
+                    GeocodingModel geocodingModel = GeocodingModel.parseIntoModel(jsonObject);
+
+                    Log.d(TAG, "onPostExecute: " + geocodingModel.toString());
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
             } else {
                 Toast.makeText(LoginActivity.this, "Hubo un error, verifica tu conexión", Toast.LENGTH_SHORT).show();
